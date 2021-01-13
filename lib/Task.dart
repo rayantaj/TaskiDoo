@@ -1,14 +1,21 @@
 class Task {
-
   String title;
   String description;
-  DateTime date;
+  String date;
   bool flag;
+  int id;
 
-  Task(this.title, this.description, this.date, this.flag);
+  Task(this.title, this.description, this.date, this.flag, this.id);
 
-getInfo(){
-  return title +" , " + description + " , " + date.toString() + " , " + flag.toString() ;
-}
-
+  getInfo() {
+    return id.toString() +
+        " , " +
+        title +
+        " , " +
+        description +
+        " , " +
+        date.toString() +
+        " , " +
+        flag.toString();
+  }
 }

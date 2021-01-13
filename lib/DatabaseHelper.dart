@@ -8,16 +8,17 @@ class DatabaseHelper {
   DatabaseHelper.privateConstructor();
 
   static final DatabaseHelper instance = DatabaseHelper.privateConstructor();
-  static final dbName = 'myDatabase.db';
+  static final dbName = 'myDatabase1.db';
   static final dbVersion = 1;
 
   static Database _database;
 
-  static final tableName = 'Tasks';
+  static final tableName = 'Tasks2';
   static final colID = 'id';
   static final colTitle = 'title';
   static final colDesc = 'description';
   static final colFlag = 'flag';
+  static final colDate = 'date';
 
   Future<Database> get database async {
     if (_database != null)
@@ -53,6 +54,7 @@ class DatabaseHelper {
     $colID INTEGER PRIMARY KEY , 
     $colTitle TEXT NOT NULL , 
     $colDesc TEXT , 
+    $colDate TEXT , 
     $colFlag INTEGER
      );
     ''');

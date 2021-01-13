@@ -1,10 +1,10 @@
-
-
-
 import 'package:date_time_picker/date_time_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
+import 'package:taskdo/Task.dart';
+import 'package:taskdo/Variables.dart';
+import 'DatabaseHelper.dart';
+import 'constantsVariables.dart';
 import 'main.dart';
 
 class BottomSheetBuilder extends StatefulWidget {
@@ -26,7 +26,7 @@ class _BottomSheetBuilderState extends State<BottomSheetBuilder> {
                 setState(() {
                   localNewTaskTitle = text;
                 });
-                print("First text field: $localNewTaskTitle");
+                //print("First text field: $localNewTaskTitle");
               },
             ),
             TextField(
@@ -34,22 +34,17 @@ class _BottomSheetBuilderState extends State<BottomSheetBuilder> {
                 setState(() {
                   localNewDescription = text;
                 });
-                print("Second text field: $localNewDescription");
+                //print("Second text field: $localNewDescription");
               },
             ),
             DateTimePicker(
-              initialValue: '',
-              firstDate: now,
+              firstDate: DateTime.now(),
               lastDate: DateTime(2100),
-              dateLabelText: 'Date',
-              onChanged: (val) => print(val),
-              validator: (val) {
+              onChanged: (val) {
                 print(val);
-                return null;
-              },
-              onSaved: (val) {
-                localNewTaskDate = val as DateTime;
-                print(localNewTaskDate.toString());
+                setState(() {
+                  localNewTaskDate = val;
+                });
               },
             ),
             Checkbox(
@@ -57,8 +52,48 @@ class _BottomSheetBuilderState extends State<BottomSheetBuilder> {
                 onChanged: (val) {
                   setState(() {
                     localNewTaskFlag = !localNewTaskFlag;
-                    print(localNewTaskFlag);
+                    // print(localNewTaskFlag);
                   });
+                }),
+            RaisedButton(
+                child: Text('insert'),
+                onPressed: () async {
+                  Task newCreatedTask = new Task(
+                      localNewTaskTitle,
+                      localNewDescription,
+                      localNewTaskDate,
+                      localNewTaskFlag,
+                      -1);
+
+                  print(localNewTaskDate);
+
+                  int id = await DatabaseHelper.instance.insert({
+                    DatabaseHelper.colTitle: localNewTaskTitle,
+                    DatabaseHelper.colDesc: localNewDescription,
+                    DatabaseHelper.colDate: localNewTaskDate,
+                    DatabaseHelper.colFlag: localNewTaskFlag ? 1 : 2
+                  });
+
+                  print(localNewTaskDate);
+
+                  print('id is   :    $id');
+
+                  setState(() {
+                    tasksList.add(newCreatedTask);
+
+                    localNewTaskDate = null;
+                    localNewDescription = " ";
+                    localNewTaskFlag = false;
+                    localNewTaskTitle = " ";
+                  });
+
+                  for (int i = 0; i < tasksList.length; i++) {
+                    Task temp = tasksList.elementAt(i);
+                    temp.id = id;
+                    print(temp.getInfo());
+                  }
+
+                  Navigator.pop(context);
                 })
           ],
         ),
@@ -69,7 +104,34 @@ class _BottomSheetBuilderState extends State<BottomSheetBuilder> {
 
 String localNewTaskTitle;
 String localNewDescription;
-DateTime localNewTaskDate;
+String localNewTaskDate;
 bool localNewTaskFlag = false;
+DateTime tempDate;
 
-
+//
+// DateTimePicker(
+// initialValue: '',
+// firstDate: now,
+// lastDate: DateTime(2100),
+// dateLabelText: 'Date',
+// onChanged: (val) => print(val),
+// // validator: (val) {
+// //   setState(() {
+// //     localNewTaskDate = val;
+// //     tempDate = val as DateTime ;
+// //   });
+// //   return localNewTaskDate;
+// // },
+// onSaved: (val) {
+// localNewTaskDate = val;
+// tempDate = val as DateTime ;
+//
+// // setState(() {
+// //   localNewTaskDate = val;
+// //   tempDate = val as DateTime ;
+// //
+// // });
+// print(val);
+// // print(val);
+// },
+// ),

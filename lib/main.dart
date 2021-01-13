@@ -11,7 +11,6 @@ import 'component.dart';
 
 void main() {
   runApp(MyApp());
-  print(DatabaseHelper.instance.initiateDatabase());
 }
 
 class MyApp extends StatelessWidget {
@@ -74,7 +73,7 @@ class _horizontal_calenderState extends State<horizontal_calender> {
             lastDate: DateTime(2022, 12, 31),
             onDateSelected: (date) {
               setState(() {
-                txt = update();
+                // txt = update();
                 Globaldate = DateTime(date.year, date.month, date.day);
               });
             },
@@ -95,12 +94,7 @@ class _horizontal_calenderState extends State<horizontal_calender> {
               height: MediaQuery.of(context).size.height * 0.75,
               child: ListView(
                 scrollDirection: Axis.vertical,
-                children: <Widget>[
-                  buildSlidable,
-                  buildSlidable,
-                  buildSlidable,
-                  buildSlidable,
-                ],
+                children: <Widget>[],
               ),
             ),
             Padding(
@@ -147,7 +141,11 @@ class _horizontal_calenderState extends State<horizontal_calender> {
         //
         // }, child: Text('Query')),
 
-        // txt,
+        Text(Globaldate.year.toString() +
+            " / " +
+            Globaldate.month.toString() +
+            " / " +
+            Globaldate.day.toString()),
       ],
     );
   }
