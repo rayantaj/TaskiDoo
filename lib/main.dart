@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:calendar_timeline/calendar_timeline.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
+import 'package:taskdo/Task.dart';
 import 'constantsVariables.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'DatabaseHelper.dart';
@@ -61,11 +62,12 @@ bool flagImportant = false;
 
 class _horizontal_calenderState extends State<horizontal_calender> {
   @override
+  @override
   Widget build(BuildContext context) {
     return Column(
       children: <Widget>[
         Padding(
-          padding: const EdgeInsets.only(top: 70.0),
+          padding: const EdgeInsets.only(top: 60.0),
           child: CalendarTimeline(
             initialDate:
                 DateTime(Globaldate.year, Globaldate.month, Globaldate.day),
@@ -112,45 +114,28 @@ class _horizontal_calenderState extends State<horizontal_calender> {
             )
           ],
         ),
-
         // FlatButton(
         //     onPressed: () async {
+        //       List<Map<String, dynamic>> list =
+        //           await (DatabaseHelper.instance.queryAll());
         //
-        //
-        //
-        //       int i = await DatabaseHelper.instance.insert({
-        //         DatabaseHelper.colTitle: 'hospital appointment',
-        //         DatabaseHelper.colDesc: 'dr. soliman fakeeh hospital',
-        //         DatabaseHelper.colFlag: 1
-        //       });
-        //
-        //       print('id is   :    $i');
-        //
+        //       print(list);
         //     },
-        //     child: Text('Insert')),
-        // FlatButton(onPressed: () async {
-        //
-        //    var list = (await DatabaseHelper.instance.queryAll()) ;
-        //
-        //
-        //    print(list);
-        //
-        //
-        //
-        //
-        //
-        // }, child: Text('Query')),
+        //     child: Text('query'))
 
-        Text(Globaldate.year.toString() +
-            " / " +
-            Globaldate.month.toString() +
-            " / " +
-            Globaldate.day.toString()),
+        TasksCard(),
+
+        // Text(Globaldate.year.toString() +
+        //     " / " +
+        //     Globaldate.month.toString() +
+        //     " / " +
+        //     Globaldate.day.toString()),
       ],
     );
   }
 
   Slidable get buildSlidable {
+    initState();
     return Slidable(
       actionPane: SlidableDrawerActionPane(),
       actionExtentRatio: 0.2,
@@ -231,4 +216,49 @@ class _horizontal_calenderState extends State<horizontal_calender> {
       ],
     );
   }
+}
+
+class TasksCard extends StatefulWidget {
+  @override
+  _TasksCardState createState() => _TasksCardState();
+}
+
+class _TasksCardState extends State<TasksCard> {
+  @override
+  void initState() {
+    // TODO: implement initState
+
+    loadTasksList();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container();
+  }
+}
+
+void loadTasksList() async {
+  List<Map<String, dynamic>> list = await (DatabaseHelper.instance.queryAll());
+// tasksList = list.cast<Task>() ;
+//   print(list.first.values.elementAt(1));
+
+  for (int i = 0; i < list.length; i++) {
+    Task newTempTask = new Task(null, null, null, false, 0);
+
+    newTempTask.id = list[i].values.elementAt(0);
+    newTempTask.title = list[i].values.elementAt(1);
+    newTempTask.description = list[i].values.elementAt(2);
+    newTempTask.date = list[i].values.elementAt(3);
+    newTempTask.flag = list[i].values.elementAt(4) == 1 ? false : true;
+
+    tasksList.add(newTempTask);
+
+    // print(list[i].values.elementAt(0));
+    // print(list[i].values.elementAt(1));
+    // print(list[i].values.elementAt(2));
+    // print(list[i].values.elementAt(3));
+    // print(list[i].values.elementAt(4).toString() + " \n");
+  }
+
+  print(tasksList.length);
 }

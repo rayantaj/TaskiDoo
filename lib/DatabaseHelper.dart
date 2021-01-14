@@ -8,12 +8,12 @@ class DatabaseHelper {
   DatabaseHelper.privateConstructor();
 
   static final DatabaseHelper instance = DatabaseHelper.privateConstructor();
-  static final dbName = 'myDatabase1.db';
+  static final dbName = 'myDatabase2.db';
   static final dbVersion = 1;
 
   static Database _database;
 
-  static final tableName = 'Tasks2';
+  static final tableName = 'Tasks3';
   static final colID = 'id';
   static final colTitle = 'title';
   static final colDesc = 'description';
