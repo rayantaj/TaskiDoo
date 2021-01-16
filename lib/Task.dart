@@ -4,6 +4,7 @@ class Task {
   String date;
   bool flag;
   int id;
+  bool completed = false;
 
   Task(this.title, this.description, this.date, this.flag, this.id);
 

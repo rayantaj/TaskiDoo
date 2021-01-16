@@ -1,3 +1,4 @@
 import 'Task.dart';
 import '';
-List<Task> tasksList = List<Task> () ;
+List<Task> databaseTaskList = List<Task> () ;
+List<Task> taskList = List<Task> () ;

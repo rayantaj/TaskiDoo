@@ -79,16 +79,17 @@ class _BottomSheetBuilderState extends State<BottomSheetBuilder> {
                   print('id is   :    $id');
 
                   setState(() {
-                    tasksList.add(newCreatedTask);
 
+                    databaseTaskList.add(newCreatedTask);
                     localNewTaskDate = null;
                     localNewDescription = " ";
                     localNewTaskFlag = false;
                     localNewTaskTitle = " ";
+                    loadTasksList();
                   });
 
-                  for (int i = 0; i < tasksList.length; i++) {
-                    Task temp = tasksList.elementAt(i);
+                  for (int i = 0; i < databaseTaskList.length; i++) {
+                    Task temp = databaseTaskList.elementAt(i);
                     temp.id = id;
                     print(temp.getInfo());
                   }
