@@ -4,7 +4,6 @@ import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 
 class DatabaseHelper {
-
   DatabaseHelper.privateConstructor();
 
   static final DatabaseHelper instance = DatabaseHelper.privateConstructor();
@@ -21,12 +20,10 @@ class DatabaseHelper {
   static final colDate = 'date';
 
   Future<Database> get database async {
-    if (_database != null)
-      return _database;
+    if (_database != null) return _database;
 
-
-      _database = await initiateDatabase();
-      return _database;
+    _database = await initiateDatabase();
+    return _database;
   }
 
   // Future<Database> getDatabase()async {
@@ -38,12 +35,12 @@ class DatabaseHelper {
 
   initiateDatabase() async {
     Directory directory = await getApplicationDocumentsDirectory();
-   // print(directory);
+    // print(directory);
 
     String path = join(directory.path, dbName);
     // print(path);
-    return await openDatabase(path, version: dbVersion, onCreate: onCreateDatabase);
-
+    return await openDatabase(path,
+        version: dbVersion, onCreate: onCreateDatabase);
   }
 
   Future onCreateDatabase(Database db, int version) {
@@ -58,12 +55,11 @@ class DatabaseHelper {
     $colFlag INTEGER
      );
     ''');
-
   }
 
   Future<int> insert(Map<String, dynamic> row) async {
     Database db = await instance.database;
-print(db==null);
+    print(db == null);
     return await db.insert(tableName, row);
   }
 
@@ -71,5 +67,18 @@ print(db==null);
     Database db = await instance.database;
 
     return await db.query(tableName);
+  }
+
+  Future<int> update(id, newflag) async {
+    Database db = await instance.database;
+
+    return await db.rawUpdate(
+        'UPDATE $tableName SET flag = ? WHERE id = ?', [newflag, id]);
+  }
+
+  Future<int> delete(id) async {
+    Database db = await instance.database;
+
+    return await db.rawDelete('DELETE FROM $tableName  WHERE id = ?', [id]);
   }
 }

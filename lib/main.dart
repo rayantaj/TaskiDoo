@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -88,11 +89,19 @@ class _horizontal_calenderState extends State<horizontal_calender> {
                 print('object');
                 // loadTasksList();
                 // print("clicked on a day card");
-                //
+
                 // // txt = update();
                 // //print('changed to ${date.toString()} ');
                 // Globaldate = DateTime(date.year, date.month, date.day);
                 //
+
+                for (int i = 0; i < taskList.length; i++) {
+                  if (taskList[i].completed == true) {
+                    DatabaseHelper.instance.delete(taskList[i].id);
+                  }
+                }
+
+                loadTasksList();
                 taskList = updateTasks(Globaldate);
                 print("tasklist ${taskList.length} ");
                 for (int i = 0; i < taskList.length; i++) {}
@@ -154,7 +163,7 @@ void loadTasksList() async {
   List<Map<String, dynamic>> list = await (DatabaseHelper.instance.queryAll());
 // tasksList = list.cast<Task>() ;
 //   print(list.first.values.elementAt(1));
-
+  databaseTaskList.clear();
   for (int i = 0; i < list.length; i++) {
     Task newTempTask = new Task(null, null, null, false, 0);
 
@@ -164,6 +173,7 @@ void loadTasksList() async {
     newTempTask.date = list[i].values.elementAt(3);
     newTempTask.flag = list[i].values.elementAt(4) == 1 ? false : true;
     // print( newTempTask.date)     ;
+
     databaseTaskList.add(newTempTask);
 
     // print(list[i].values.elementAt(0));
@@ -237,15 +247,26 @@ class _TaskcardsState extends State<Taskcards> {
                     CheckboxListTile(
                       title: Text(
                         taskList[index].title,
-                        style: (taskList[index].completed == true)
+                        style: taskList[index].completed
                             ? checkedHeaderTitle
                             : uncheckedHeaderTitle,
                       ),
                       value: taskList[index].completed,
                       onChanged: (newValue) {
                         setState(() {
-                          taskList[index].completed = newValue;
+                          taskList[index].completed =
+                              !taskList[index].completed;
                         });
+                        // DatabaseHelper.instance.delete(taskList[index].id);
+                        // loadTasksList();
+                        // setState(() {
+                        //
+                        //   DatabaseHelper.instance.delete(taskList[index].id);
+                        //   loadTasksList();
+                        //
+                        //   taskList = updateTasks(Globaldate);
+                        //   // Here you can write your code for open new view
+                        // });
                       },
                       controlAffinity: ListTileControlAffinity
                           .leading, //  <-- leading Checkbox
@@ -266,6 +287,13 @@ class _TaskcardsState extends State<Taskcards> {
                           FlatButton.icon(
                               onPressed: () {
                                 setState(() {
+                                  int flag = taskList[index].flag ? 1 : 2;
+
+                                  DatabaseHelper.instance
+                                      .update(taskList[index].id, flag);
+                                  loadTasksList();
+                                  taskList = updateTasks(Globaldate);
+
                                   taskList[index].flag = !taskList[index].flag;
                                 });
                               },
@@ -283,3 +311,132 @@ class _TaskcardsState extends State<Taskcards> {
           );
   }
 }
+
+// class BottomSheetBuilder extends StatefulWidget {
+//   @override
+//   _BottomSheetBuilderState createState() => _BottomSheetBuilderState();
+// }
+//
+// class _BottomSheetBuilderState extends State<BottomSheetBuilder> {
+//   @override
+//   Widget build(BuildContext context) {
+//     return Container(
+//       child: Padding(
+//         padding: const EdgeInsets.all(32.0),
+//         child: Column(
+//           children: <Widget>[
+//             Text('data'),
+//             TextField(
+//               onChanged: (text) {
+//                 setState(() {
+//                   localNewTaskTitle = text;
+//                 });
+//                 //print("First text field: $localNewTaskTitle");
+//               },
+//             ),
+//             TextField(
+//               onChanged: (text) {
+//                 setState(() {
+//                   localNewDescription = text;
+//                 });
+//                 //print("Second text field: $localNewDescription");
+//               },
+//             ),
+//             DateTimePicker(
+//               firstDate: DateTime.now(),
+//               lastDate: DateTime(2100),
+//               onChanged: (val) {
+//                 print(val);
+//                 setState(() {
+//                   localNewTaskDate = val;
+//                 });
+//               },
+//             ),
+//             Checkbox(
+//                 value: localNewTaskFlag,
+//                 onChanged: (val) {
+//                   setState(() {
+//                     localNewTaskFlag = !localNewTaskFlag;
+//                     // print(localNewTaskFlag);
+//                   });
+//                 }),
+//             RaisedButton(
+//                 child: Text('insert'),
+//                 onPressed: () async {
+//                   Task newCreatedTask = new Task(
+//                       localNewTaskTitle,
+//                       localNewDescription,
+//                       localNewTaskDate,
+//                       localNewTaskFlag,
+//                       -1);
+//
+//                   int id = await DatabaseHelper.instance.insert({
+//                     DatabaseHelper.colTitle: localNewTaskTitle,
+//                     DatabaseHelper.colDesc: localNewDescription,
+//                     DatabaseHelper.colDate: localNewTaskDate,
+//                     DatabaseHelper.colFlag: localNewTaskFlag ? 1 : 2
+//                   });
+//
+//                   print('id is   :    $id');
+//
+//                   setState(() {
+//                     databaseTaskList.add(newCreatedTask);
+//                     localNewTaskDate = null;
+//                     localNewDescription = " ";
+//                     localNewTaskFlag = false;
+//                     localNewTaskTitle = " ";
+//
+//                     taskList = updateTasks(Globaldate);
+//
+//
+//                   });
+//
+//                   for (int i = 0; i < databaseTaskList.length; i++) {
+//                     Task temp = databaseTaskList.elementAt(i);
+//                     temp.id = id;
+//                     print(temp.getInfo());
+//                   }
+//
+//                   Navigator.pop(context);
+//
+//                 })
+//           ],
+//         ),
+//       ),
+//     );
+//   }
+// }
+//
+// String localNewTaskTitle;
+// String localNewDescription;
+// String localNewTaskDate;
+// bool localNewTaskFlag = false;
+// DateTime tempDate;
+
+//
+// DateTimePicker(
+// initialValue: '',
+// firstDate: now,
+// lastDate: DateTime(2100),
+// dateLabelText: 'Date',
+// onChanged: (val) => print(val),
+// // validator: (val) {
+// //   setState(() {
+// //     localNewTaskDate = val;
+// //     tempDate = val as DateTime ;
+// //   });
+// //   return localNewTaskDate;
+// // },
+// onSaved: (val) {
+// localNewTaskDate = val;
+// tempDate = val as DateTime ;
+//
+// // setState(() {
+// //   localNewTaskDate = val;
+// //   tempDate = val as DateTime ;
+// //
+// // });
+// print(val);
+// // print(val);
+// },
+// ),
