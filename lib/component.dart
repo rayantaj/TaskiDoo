@@ -65,8 +65,6 @@ class _BottomSheetBuilderState extends State<BottomSheetBuilder> {
                       localNewTaskFlag,
                       -1);
 
-
-
                   int id = await DatabaseHelper.instance.insert({
                     DatabaseHelper.colTitle: localNewTaskTitle,
                     DatabaseHelper.colDesc: localNewDescription,
@@ -74,36 +72,26 @@ class _BottomSheetBuilderState extends State<BottomSheetBuilder> {
                     DatabaseHelper.colFlag: localNewTaskFlag ? 1 : 2
                   });
 
-
-
                   print('id is   :    $id');
 
                   setState(() {
-
                     databaseTaskList.add(newCreatedTask);
                     localNewTaskDate = null;
                     localNewDescription = " ";
                     localNewTaskFlag = false;
                     localNewTaskTitle = " ";
 
-
-
                     taskList = updateTasks(Globaldate);
+                    AppBuilder.of(context).rebuild();
+
                     Navigator.pop(context);
-                    Navigator.popAndPushNamed(context,'/main.dart');
-
-
                   });
-
-
 
                   for (int i = 0; i < databaseTaskList.length; i++) {
                     Task temp = databaseTaskList.elementAt(i);
                     temp.id = id;
                     print(temp.getInfo());
                   }
-
-
                 })
           ],
         ),

@@ -5,11 +5,13 @@ import 'package:flutter/material.dart';
 import 'package:calendar_timeline/calendar_timeline.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
+
 import 'package:taskdo/Task.dart';
 import 'constantsVariables.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'DatabaseHelper.dart';
 import 'Variables.dart';
+import 'constantsVariables.dart';
 import 'package:date_time_picker/date_time_picker.dart';
 import 'component.dart';
 
@@ -19,17 +21,17 @@ void main() {
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
-  @override
   Widget build(BuildContext context) {
-    initializeDateFormatting('es_US', null);
-    return MaterialApp(
-      title: 'TO-DOO',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-        visualDensity: VisualDensity.adaptivePlatformDensity,
-      ),
-      home: myHome(),
-    );
+    return AppBuilder(builder: (context) {
+      return MaterialApp(
+        title: 'TO-DOO',
+        theme: ThemeData(
+          primarySwatch: Colors.blue,
+          visualDensity: VisualDensity.adaptivePlatformDensity,
+        ),
+        home: myHome(),
+      );
+    });
   }
 }
 
@@ -312,131 +314,26 @@ class _TaskcardsState extends State<Taskcards> {
   }
 }
 
-// class BottomSheetBuilder extends StatefulWidget {
-//   @override
-//   _BottomSheetBuilderState createState() => _BottomSheetBuilderState();
-// }
-//
-// class _BottomSheetBuilderState extends State<BottomSheetBuilder> {
-//   @override
-//   Widget build(BuildContext context) {
-//     return Container(
-//       child: Padding(
-//         padding: const EdgeInsets.all(32.0),
-//         child: Column(
-//           children: <Widget>[
-//             Text('data'),
-//             TextField(
-//               onChanged: (text) {
-//                 setState(() {
-//                   localNewTaskTitle = text;
-//                 });
-//                 //print("First text field: $localNewTaskTitle");
-//               },
-//             ),
-//             TextField(
-//               onChanged: (text) {
-//                 setState(() {
-//                   localNewDescription = text;
-//                 });
-//                 //print("Second text field: $localNewDescription");
-//               },
-//             ),
-//             DateTimePicker(
-//               firstDate: DateTime.now(),
-//               lastDate: DateTime(2100),
-//               onChanged: (val) {
-//                 print(val);
-//                 setState(() {
-//                   localNewTaskDate = val;
-//                 });
-//               },
-//             ),
-//             Checkbox(
-//                 value: localNewTaskFlag,
-//                 onChanged: (val) {
-//                   setState(() {
-//                     localNewTaskFlag = !localNewTaskFlag;
-//                     // print(localNewTaskFlag);
-//                   });
-//                 }),
-//             RaisedButton(
-//                 child: Text('insert'),
-//                 onPressed: () async {
-//                   Task newCreatedTask = new Task(
-//                       localNewTaskTitle,
-//                       localNewDescription,
-//                       localNewTaskDate,
-//                       localNewTaskFlag,
-//                       -1);
-//
-//                   int id = await DatabaseHelper.instance.insert({
-//                     DatabaseHelper.colTitle: localNewTaskTitle,
-//                     DatabaseHelper.colDesc: localNewDescription,
-//                     DatabaseHelper.colDate: localNewTaskDate,
-//                     DatabaseHelper.colFlag: localNewTaskFlag ? 1 : 2
-//                   });
-//
-//                   print('id is   :    $id');
-//
-//                   setState(() {
-//                     databaseTaskList.add(newCreatedTask);
-//                     localNewTaskDate = null;
-//                     localNewDescription = " ";
-//                     localNewTaskFlag = false;
-//                     localNewTaskTitle = " ";
-//
-//                     taskList = updateTasks(Globaldate);
-//
-//
-//                   });
-//
-//                   for (int i = 0; i < databaseTaskList.length; i++) {
-//                     Task temp = databaseTaskList.elementAt(i);
-//                     temp.id = id;
-//                     print(temp.getInfo());
-//                   }
-//
-//                   Navigator.pop(context);
-//
-//                 })
-//           ],
-//         ),
-//       ),
-//     );
-//   }
-// }
-//
-// String localNewTaskTitle;
-// String localNewDescription;
-// String localNewTaskDate;
-// bool localNewTaskFlag = false;
-// DateTime tempDate;
+class AppBuilder extends StatefulWidget {
+  final Function(BuildContext) builder;
 
-//
-// DateTimePicker(
-// initialValue: '',
-// firstDate: now,
-// lastDate: DateTime(2100),
-// dateLabelText: 'Date',
-// onChanged: (val) => print(val),
-// // validator: (val) {
-// //   setState(() {
-// //     localNewTaskDate = val;
-// //     tempDate = val as DateTime ;
-// //   });
-// //   return localNewTaskDate;
-// // },
-// onSaved: (val) {
-// localNewTaskDate = val;
-// tempDate = val as DateTime ;
-//
-// // setState(() {
-// //   localNewTaskDate = val;
-// //   tempDate = val as DateTime ;
-// //
-// // });
-// print(val);
-// // print(val);
-// },
-// ),
+  const AppBuilder({Key key, this.builder}) : super(key: key);
+
+  @override
+  AppBuilderState createState() => new AppBuilderState();
+
+  static AppBuilderState of(BuildContext context) {
+    return context.ancestorStateOfType(const TypeMatcher<AppBuilderState>());
+  }
+}
+
+class AppBuilderState extends State<AppBuilder> {
+  @override
+  Widget build(BuildContext context) {
+    return widget.builder(context);
+  }
+
+  void rebuild() {
+    setState(() {});
+  }
+}

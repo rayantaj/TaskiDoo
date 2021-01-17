@@ -1,4 +1,13 @@
+import 'package:flutter/material.dart';
+
 import 'Task.dart';
-import '';
-List<Task> databaseTaskList = List<Task> () ;
-List<Task> taskList = List<Task> () ;
+
+class Data extends ChangeNotifier {
+
+
+
+
+  Data();
+}
+List<Task> databaseTaskList = List<Task>();
+List<Task> taskList = List<Task>();
