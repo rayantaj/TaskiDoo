@@ -1,16 +1,8 @@
 # taskdo
 
-A new Flutter application.
+Taskido is an task reminder/calander type of applications. there are three main features in Taskidoo the first is you can add a new task with a specifc date and description if available, secondly you can delete the task when you completed. All data are saved localy in the device meaning there is no need for internet.
 
-## Getting Started
+## Technologies 
+- Flutter & Dart 
 
-This project is a starting point for a Flutter application.
 
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
